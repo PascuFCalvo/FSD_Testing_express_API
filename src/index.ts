@@ -31,10 +31,9 @@ app.post("/users", (req, res) => {
 
   rl.question("Enter the new user to add to user list: ", (name) => {
     if (name) {
-      users.push(name);
-      return res.send(`User >>${name}<< added to the list [${users}]`,); // Agrega el nuevo usuario a la matriz
+      users.push(name); // Agrega el nuevo usuario al array
       rl.close();
-       // Devuelve la lista actualizada de usuarios
+      return res.send(`User >>${name}<< added to the list [${users}]`); // Devuelve la lista actualizada de usuarios
     } else {
       rl.close();
       return res.status(400).send("Please, enter a valid name.");
@@ -49,19 +48,16 @@ app.delete("/users", (req, res) => {
     output: process.stdout,
   });
   console.log(users);
-  rl.question(
-    `Enter a name of the list to delete[${users}]=>`,
-    (userName) => {
-      rl.close();
+  rl.question(`Enter a name of the list to delete[${users}]=>`, (userName) => {
+    rl.close();
 
-      const index = users.indexOf(userName);
+    const index = users.indexOf(userName);
 
-      if (index === -1) {
-        return res.status(400).send(`user ${userName} no exists`);
-      }
-
-      users.splice(index, 1);
-      return res.send(`User >>${userName}<< deleted from users list`);
+    if (index === -1) {
+      return res.status(400).send(`user ${userName} no exists`);
     }
-  );
+
+    users.splice(index, 1);
+    return res.send(`User >>${userName}<< deleted from users list [${users}]`);
+  });
 });
