@@ -1,0 +1,11 @@
+npm init
+npm install express
+git init
+npm install typescript -D
+npx tsc --init
+npm install @types/express @types/node -D
+npm install ts-node nodemon -D
+buscar en el tsconfig.json la linea donde esta el outdir y poner ahi la ruta
+npm install nodemon
+npx nodemon ./src/index.ts
+en el package json , en scripts, hacer el script dev con el punto de entrada 
