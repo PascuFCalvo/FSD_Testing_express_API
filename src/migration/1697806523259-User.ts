@@ -28,6 +28,10 @@ export class User1697806523259 implements MigrationInterface {
                         name: "password",
                         type: "varchar",
                         length: "50",
+                    },
+                    {
+                        name: "isActive",
+                        type: "boolean"
                     }
                 ],
             }),

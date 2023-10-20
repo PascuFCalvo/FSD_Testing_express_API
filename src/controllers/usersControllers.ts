@@ -17,8 +17,22 @@ const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
-const getUserById = (req: Request, res: Response) => {
+const getUserById = async (req: Request, res: Response) => {
   try {
+    const userToShow = req.params.id;
+    const messageReturn = "USUARIO SELECCIONADO";
+    const userToShow_ = await User.findOneBy({
+      id: parseInt(userToShow),
+    });
+
+
+
+    const response = {
+      message: messageReturn,
+      userToShow_,
+    };
+    return res.json(response);
+    
   } catch (error) {}
 };
 
@@ -67,6 +81,15 @@ const deleteUserById = async (req: Request, res: Response) => {
   }
 };
 
+const inactivateUser = async (req:Request, res: Response) => {
+  try {
+    
+  } catch (error) {
+    
+  }
+  
+}
+
 const modifyUserById = async (req: Request, res: Response) => {
   try {
     const userToUpdate = req.params.id;
@@ -95,4 +118,4 @@ const modifyUserById = async (req: Request, res: Response) => {
   }
 };
 
-export { getAllUsers, getUserById, createUser, deleteUserById, modifyUserById };
+export { getAllUsers, getUserById, createUser, deleteUserById, modifyUserById, inactivateUser };

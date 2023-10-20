@@ -1,7 +1,7 @@
 import express from "express";
 import { router as routerUsers } from "./routes/usersRoutes"
 import { router as routerStatus } from "./routes/statusRoutes"
-import { router as routerPassword } from "./routes/passwordRoutes"
+
 import { AppDataSource } from "../database";
 
 
@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use("/users",routerUsers);
 app.use("/status",routerStatus);
-app.use("/password",routerPassword);
+
 
 AppDataSource.initialize()
 .then(() => {
