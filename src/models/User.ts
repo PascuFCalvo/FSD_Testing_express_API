@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm"
 
-@Entity("films")
+@Entity("Users")
 export class User extends BaseEntity {
 
    @PrimaryGeneratedColumn()
@@ -10,6 +10,6 @@ export class User extends BaseEntity {
    @Column()
    email!:string
    @Column()
-   passwordl!:string
+   password!:string
 
 }
