@@ -12,6 +12,6 @@ export class User extends BaseEntity {
    @Column()
    password!:string
    @Column()
-   issactive!:boolean
+   isActive!:boolean
 
 }

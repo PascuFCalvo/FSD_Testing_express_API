@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { User } from "../models/User";
+import { Like } from "typeorm";
 
 const getAllUsers = async (req: Request, res: Response) => {
   try {
@@ -25,16 +26,40 @@ const getUserById = async (req: Request, res: Response) => {
       id: parseInt(userToShow),
     });
 
-
-
     const response = {
       message: messageReturn,
       userToShow_,
     };
     return res.json(response);
-    
-  } catch (error) {}
+  } catch (error) {
+    return res.send(error);
+  }
 };
+
+const getUserByName = async (req: Request, res: Response) => {
+  try {
+    const nameToSearch = req.params.name;
+    const messageReturn = "USUARIO SELECCIONADO POR NOMBRE";
+    const userToShow = await User.find({
+      where: {
+        name: Like(`%${nameToSearch}%`),
+      },
+    });
+
+    const response = {
+      message: messageReturn,
+      userToShow,
+    };
+    return res.json(response);
+  } catch (error) {
+    return res.send(error);
+  }
+};
+
+
+
+
+
 
 const createUser = async (req: Request, res: Response) => {
   try {
@@ -81,14 +106,50 @@ const deleteUserById = async (req: Request, res: Response) => {
   }
 };
 
-const inactivateUser = async (req:Request, res: Response) => {
+const inactivateUser = async (req: Request, res: Response) => {
   try {
-    
+    const userId = req.params.id;
+    const messageReturn = "SE HA DESACTIVADO EL USUARIO";
+
+    // Actualiza el valor de isActive a false
+    await User.update({ id: parseInt(userId) }, { isActive: false });
+
+    const updatedUser = await User.findOneBy({
+      id: parseInt(userId),
+    });
+
+    const response = {
+      message: messageReturn,
+      updatedUser,
+    };
+
+    return res.json(response);
   } catch (error) {
-    
+    return res.json(error);
   }
-  
-}
+};
+
+const activateUser = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.id;
+    const messageReturn = "SE HA RESTABLECIDO EL USUARIO";
+
+    await User.update({ id: parseInt(userId) }, { isActive: true });
+
+    const updatedUser = await User.findOneBy({
+      id: parseInt(userId),
+    });
+
+    const response = {
+      message: messageReturn,
+      updatedUser,
+    };
+
+    return res.json(response);
+  } catch (error) {
+    return res.json(error);
+  }
+};
 
 const modifyUserById = async (req: Request, res: Response) => {
   try {
@@ -118,4 +179,14 @@ const modifyUserById = async (req: Request, res: Response) => {
   }
 };
 
-export { getAllUsers, getUserById, createUser, deleteUserById, modifyUserById, inactivateUser };
+export {
+  getAllUsers,
+  getUserById,
+  createUser,
+  deleteUserById,
+  modifyUserById,
+  inactivateUser,
+  activateUser,
+  getUserByName
+
+};
