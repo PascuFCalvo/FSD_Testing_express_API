@@ -6,10 +6,11 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Team } from "./Team";
 
-@Entity("Users")
-export class User extends BaseEntity {
+import { User } from "./User";
+
+@Entity("Team")
+export class Team extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -17,15 +18,12 @@ export class User extends BaseEntity {
   name!: string;
 
   @Column()
-  email!: string;
+  race!: string;
 
   @Column()
-  password!: string;
+  userId!: number;
 
-  @Column()
-  isActive!: boolean;
-
-  @OneToOne(() => Team, { cascade: true })
+  @OneToOne(() => User, { cascade: true })
   @JoinColumn()
-  team!: Team;
+  user!: User;
 }
