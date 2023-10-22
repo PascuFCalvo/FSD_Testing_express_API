@@ -2,7 +2,6 @@ import {
   MigrationInterface,
   QueryRunner,
   Table,
-  TableForeignKey,
 } from "typeorm";
 
 export class Team1697966605986 implements MigrationInterface {
@@ -40,6 +39,7 @@ export class Team1697966605986 implements MigrationInterface {
             referencedColumnNames: ["id"],
             onDelete: "CASCADE",
           },
+          
         ],
       }),
       true
