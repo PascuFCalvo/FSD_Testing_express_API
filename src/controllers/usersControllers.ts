@@ -65,7 +65,12 @@ const createUser = async (req: Request, res: Response) => {
     const newUserEmail = req.body.email;
     const newUserPassword = req.body.password;
 
-    //faltan validaciones (comprobar que tenga un @ en el mail...que todos los datos esten bien etc)
+    function ValidateEmail(email: string) {
+      if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+        return res.json("You have entered an invalid email address!");
+      }
+    }
+    ValidateEmail(newUserEmail);
 
     const encriptedPassword = bcrypt.hashSync(newUserPassword, 10);
 
@@ -90,21 +95,36 @@ const loginUser = async (req: Request, res: Response) => {
   try {
     const email = req.body.email;
     const password = req.body.password;
-
     const user = await User.findOneBy({
       email: email,
     });
-    console.log(user!.password);
-
     if (!user) {
-      return res.json("User or password is not ok, retry.");
+      return res.json({
+        success: true,
+        message: "User on password incorrect",
+      });
     }
-    if (bcrypt.compareSync(password, user.password)) {
-      return res.json("Bienvenido :" + user.name);
+    if (!bcrypt.compareSync(password, user.password)) {
+      return res.json({
+        success: true,
+        message: "User on password incorrect",
+      });
     }
-    return res.json("User or password is not ok, retry.");
+    return res.json({
+      success: true,
+      message: `login user successfully`,
+      data: {
+        name: user.name,
+        id: user.id,
+        email: user.email,
+      },
+    });
   } catch (error) {
-    return res.json(error);
+    return res.json({
+      success: false,
+      message: "can't login user",
+      error: error,
+    });
   }
 };
 
