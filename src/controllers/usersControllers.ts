@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
-import { User } from "../models/User";
+import  bcrypt  from "bcrypt";
 import { Like } from "typeorm";
+import { User } from "../models/User";
 
 const getAllUsers = async (req: Request, res: Response) => {
   try {
@@ -56,33 +57,32 @@ const getUserByName = async (req: Request, res: Response) => {
   }
 };
 
-
-
-
-
-
 const createUser = async (req: Request, res: Response) => {
   try {
-    const newUser = req.body;
+    
     const messageReturn = "SE HA CRADO EL USUARIO";
+    // const { name, email, password} = req.body;
     const newUserName = req.body.name;
     const newUserEmail = req.body.email;
     const newUserPassword = req.body.password;
 
-    await User.create({
+    const encriptedPassword = bcrypt.hashSync(newUserPassword, 10)
+
+    const createdUSer = await User.create({
       name: newUserName,
       email: newUserEmail,
-      password: newUserPassword,
+      password: encriptedPassword,
+      
     }).save();
 
     const response = {
       message: messageReturn,
-      newUser,
+      createdUSer,
     };
 
     return res.json(response);
   } catch (error) {
-    return res.send(error);
+    return res.json(error);
   }
 };
 

@@ -3,7 +3,7 @@ import {
   Column,
   Entity,
   PrimaryGeneratedColumn,
-  Timestamp,
+  
 } from "typeorm";
 
 @Entity("Users")
@@ -28,9 +28,9 @@ export class User extends BaseEntity {
   role!: string;
 
   @Column()
-  created_at!: Timestamp;
+  created_at!: Date;
 
   @Column()
-  updated_at!: Timestamp;
+  updated_at!: Date;
 
 }
