@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import  bcrypt  from "bcrypt";
+import bcrypt from "bcrypt";
 import { Like } from "typeorm";
 import { User } from "../models/User";
 
@@ -59,20 +59,20 @@ const getUserByName = async (req: Request, res: Response) => {
 
 const createUser = async (req: Request, res: Response) => {
   try {
-    
     const messageReturn = "SE HA CRADO EL USUARIO";
     // const { name, email, password} = req.body;
     const newUserName = req.body.name;
     const newUserEmail = req.body.email;
     const newUserPassword = req.body.password;
 
-    const encriptedPassword = bcrypt.hashSync(newUserPassword, 10)
+    //faltan validaciones (comprobar que tenga un @ en el mail...que todos los datos esten bien etc)
+
+    const encriptedPassword = bcrypt.hashSync(newUserPassword, 10);
 
     const createdUSer = await User.create({
       name: newUserName,
       email: newUserEmail,
       password: encriptedPassword,
-      
     }).save();
 
     const response = {
@@ -81,6 +81,28 @@ const createUser = async (req: Request, res: Response) => {
     };
 
     return res.json(response);
+  } catch (error) {
+    return res.json(error);
+  }
+};
+
+const loginUser = async (req: Request, res: Response) => {
+  try {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    const user = await User.findOneBy({
+      email: email,
+    });
+    console.log(user!.password);
+
+    if (!user) {
+      return res.json("User or password is not ok, retry.");
+    }
+    if (bcrypt.compareSync(password, user.password)) {
+      return res.json("Bienvenido :" + user.name);
+    }
+    return res.json("User or password is not ok, retry.");
   } catch (error) {
     return res.json(error);
   }
@@ -187,6 +209,6 @@ export {
   modifyUserById,
   inactivateUser,
   activateUser,
-  getUserByName
-
+  getUserByName,
+  loginUser,
 };
