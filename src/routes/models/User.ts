@@ -2,14 +2,13 @@ import {
   BaseEntity,
   Column,
   Entity,
-  JoinColumn,
-  OneToOne,
   PrimaryGeneratedColumn,
+  Timestamp,
 } from "typeorm";
-import { Team } from "./Team";
 
 @Entity("Users")
 export class User extends BaseEntity {
+  
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -25,7 +24,13 @@ export class User extends BaseEntity {
   @Column()
   isActive!: boolean;
 
-  @OneToOne(() => Team, { cascade: true })
-  @JoinColumn()
-  team!: Team;
+  @Column()
+  role!: string;
+
+  @Column()
+  created_at!: Timestamp;
+
+  @Column()
+  updated_at!: Timestamp;
+
 }

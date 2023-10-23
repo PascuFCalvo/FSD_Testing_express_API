@@ -22,6 +22,7 @@ export class User1697806523259 implements MigrationInterface {
             name: "email",
             type: "varchar",
             length: "100",
+            isUnique: true
           },
           {
             name: "password",
@@ -31,6 +32,24 @@ export class User1697806523259 implements MigrationInterface {
           {
             name: "isActive",
             type: "boolean",
+            default: "true",
+          },
+          {
+            name: "role",
+            type: "enum",
+            enum: ["user", "admin", "super_admin"],
+            default: '"user"',
+          },
+          {
+            name: "created_at",
+            type: "timestamp",
+            default: "CURRENT_TIMESTAMP",
+          },
+          {
+            name: "updated_at",
+            type: "timestamp",
+            default: "CURRENT_TIMESTAMP",
+            onUpdate: "CURRENT_TIMESTAMP",
           },
         ],
       }),
