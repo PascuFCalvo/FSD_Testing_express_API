@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { Like } from "typeorm";
 import { User } from "../models/User";
+import jwt  from "jsonwebtoken";
 
 const getAllUsers = async (req: Request, res: Response) => {
   try {
@@ -60,7 +61,7 @@ const getUserByName = async (req: Request, res: Response) => {
 const createUser = async (req: Request, res: Response) => {
   try {
     const messageReturn = "SE HA CRADO EL USUARIO";
-    // const { name, email, password} = req.body;
+    
     const newUserName = req.body.name;
     const newUserEmail = req.body.email;
     const newUserPassword = req.body.password;
@@ -91,38 +92,56 @@ const createUser = async (req: Request, res: Response) => {
   }
 };
 
-const loginUser = async (req: Request, res: Response) => {
+const loginUser = async (req:Request, res:Response) => {
   try {
     const email = req.body.email;
     const password = req.body.password;
     const user = await User.findOneBy({
       email: email,
     });
+
     if (!user) {
       return res.json({
-        success: true,
-        message: "User on password incorrect",
+        success: false,
+        message: "User not found",
       });
     }
-    if (!bcrypt.compareSync(password, user.password)) {
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
       return res.json({
-        success: true,
-        message: "User on password incorrect",
+        success: false,
+        message: "Incorrect password",
       });
     }
+    //creando el jsonwebtoken
+    const token = jwt.sign(
+      {
+        id: user.id,
+        role: user.role,
+      },
+      "Pascu",
+      {
+        expiresIn: "2h",
+      }
+    );
+
     return res.json({
       success: true,
-      message: `login user successfully`,
+      message: "Login successful",
+      token: token,
       data: {
         name: user.name,
         id: user.id,
         email: user.email,
       },
     });
+
   } catch (error) {
     return res.json({
       success: false,
-      message: "can't login user",
+      message: "Can't log in user",
       error: error,
     });
   }
@@ -221,7 +240,16 @@ const modifyUserById = async (req: Request, res: Response) => {
   }
 };
 
+const profile = async(req: Request, res: Response)=>
+{
+  console.log("hola")
+  return res.json({
+    "message":"PROFILE"
+})
+}
+
 export {
+  profile,
   getAllUsers,
   getUserById,
   createUser,
